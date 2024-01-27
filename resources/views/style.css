@@ -1,0 +1,420 @@
+body {
+    padding-top: 56px;
+}
+.header-item{
+  background-color:aqua;
+  height: 30px;
+  width: 30px;
+  display: inline-block;
+  margin-right: 40px; 
+  
+  
+}
+.div-header-left
+{
+  margin-left: 40px;
+}
+.top-header
+{
+  margin-left: 40px;
+}
+#datetime {
+  font-size: 20px;
+}
+#weather-icon {
+  width: 20px;  
+  height: 20px;
+  filter: invert(1); 
+}
+.weather{
+  display: inline-block;
+}
+header
+{
+  background-color: #fcfcfc;
+  color: rgb(200, 200, 200);
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  
+}
+
+.div-header-left
+{
+ display: flex;
+ align-items: center;
+}
+      .sticky {
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+.sticky + .content {
+  padding-top: 60px;
+}
+nav.sticky {
+  background-color: #f8f9fa;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  margin-bottom: 20px; }
+body {
+  padding-top: 56px; }
+
+header {
+  background-color: #ffffff;
+  color: rgb(16, 12, 12);
+  text-align: center;
+  padding: 10px;
+}
+
+nav {
+  background-color: #f8f9fa;
+  
+}
+
+.content-box {
+  background-color: #e9ecef;
+  padding: 20px;
+  margin-bottom: 10px;
+  border: 1px solid #ced4da;
+}
+
+.main-section {
+  padding: 20px;
+}
+
+.side-section {
+  background-color: #f8f9fa;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+#citySelector {
+          display: inline-block;
+          position: relative;
+      }
+
+      #citySelector:hover #cityList {
+          display: block;
+      }
+
+      #cityList {
+          display: none;
+          position: absolute;
+          top: 100%;
+          left: 0;
+          background-color: #f1f1f1;
+          box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+          z-index: 1;
+          min-width: 160px;
+      }
+
+      #cityList a {
+          color: #333;
+          padding: 12px 16px;
+          text-decoration: none;
+          display: block;
+      }
+
+      #cityList a:hover {
+          background-color: #ddd;
+      }
+
+      #weatherInfo {
+          text-align: center;
+          margin-top: 20px;
+      }
+
+      #weatherInfo img {
+          width: 50px;
+          height: 50px;
+      }
+      header {
+    background-color: #333;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+  }
+
+  #searchBar {
+    display: flex;
+    align-items: center;
+  }
+
+  #searchInput {
+    padding: 5px;
+    margin-right: 10px;
+  }
+
+  
+
+  #notificationIcon,
+  #loginIcon {
+    font-size: 20px;
+    margin-right: 10px;
+    color: white;
+    cursor: pointer;
+  }
+
+  #weatherInfo {
+    display: flex;
+    align-items: center;
+  }
+
+  #citySelector {
+    margin-right: 10px;
+  }
+
+  #selectedCity {
+    padding: 5px;
+  }
+
+  #dateTime,
+  #temperature,
+  #temperature-icon img {
+    margin-left: 10px;
+  }
+  .header-section
+  {
+
+      display: flex;
+      align-items: center;
+  }
+  #notificationIcon
+  {
+    color: white;
+  }
+  #notificationIcon:hover
+  {
+    font-size: 150%;
+  }
+  #notificationIcon:active
+  {
+      color: red;
+  }
+  #loginIcon:hover
+  {
+     color: green;
+  }
+  #loginIcon:active
+  {
+      font-size: 150%;
+  }
+  
+  #citySelector
+  {
+      display: flex;
+      align-items: center;
+  }
+  .ma
+  {
+    font-size: 300%;  
+  }
+header {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 10px;
+}
+
+nav {
+    background-color: #f8f9fa;
+    
+}
+
+.content-box {
+    background-color: #e9ecef;
+    padding: 20px;
+    margin-bottom: 10px;
+    border: 1px solid #ced4da;
+}
+
+.main-section {
+    padding: 20px;
+}
+
+.side-section {
+    background-color: #f8f9fa;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 10px;
+}
+.sticky {
+    position: fixed;
+    top: 0;
+    width: 100%;
+  }
+  
+  .sticky + .content {
+    padding-top: 60px;
+  }
+  nav.sticky {
+    background-color: #f8f9fa;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    margin-bottom: 20px; 
+}
+#popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+
+  .popup-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+  }
+
+  .close-btn {
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+
+  .toggle-btn {
+    cursor: pointer;
+    color: blue;
+    text-decoration: underline;
+  }
+
+  /* Style for active form */
+  .active-form {
+    display: block;
+  }
+
+  .inactive-form {
+    display: none;
+  }
+  #currentcity
+  {
+    display: none;
+  }
+  label
+  {
+    color: black;
+  }
+  /* CSS cho popup */
+.popup-content {
+  text-align: center;
+  position: relative;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 20px;
+  cursor: pointer;
+  color: #555;
+}
+
+.close-btn:hover {
+  color: #000;
+}
+
+/* CSS cho form */
+#login-form,
+#register-form {
+  margin-top: 20px;
+}
+
+form {
+  margin-top: 10px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+input {
+  width: calc(100% - 20px);
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.button-form {
+  background-color: #007BFF;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+/* CSS cho toggle button */
+.toggle-btn {
+  color: #007BFF;
+  cursor: pointer;
+  text-decoration: underline;
+  margin-top: 10px;
+  transition: color 0.3s;
+}
+
+.toggle-btn:hover {
+  color: #0056b3;
+}
+#loginIcon
+{
+  font-size: 97%;
+}
+#searchBar {
+  display: flex;
+  align-items: center;
+}
+
+#searchInput {
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+  width: 200px; /* Điều chỉnh chiều rộng của thanh input theo ý muốn */
+}
+
+#searchButton {
+  padding: 8px 12px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 0 5px 5px 0;
+  cursor: pointer;
+  background-color: #f1f1f1;
+  outline: none;
+}
+
+#searchButton:hover {
+  background-color: #ddd;
+}
+
+
+

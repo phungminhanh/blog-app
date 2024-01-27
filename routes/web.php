@@ -13,8 +13,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 // routes/web.php
-Route::middleware(['admin'])->group(function () {
-    Route::get('/', [\App\Http\Controllers\PostController::class, 'index'])->name('index');
+Route::middleware(['admin','auth'])->group(function () {
+    Route::get('/admin', [\App\Http\Controllers\PostController::class, 'index'])->name('index');
     Route::get('/search', [\App\Http\Controllers\PostController::class, 'search'])->name('search');
     Route::get('/{id}/edit', [\App\Http\Controllers\PostController::class, 'edit'])->name('edit');
     Route::put('/{id}/update', [\App\Http\Controllers\PostController::class, 'update'])->name('update');
@@ -24,10 +24,14 @@ Route::middleware(['admin'])->group(function () {
     Route::get('/histories', [\App\Http\Controllers\PostController::class, 'histories'])->name('histories');
     Route::get('/yourpost', [\App\Http\Controllers\PostController::class, 'PostbyAuthor'])->name('yourpost');
 });
-
-
-
+Route::get('/', [\App\Http\Controllers\UserController::class, 'getPost'])->name('blog');
+Route::get('/logout', [\App\Http\Controllers\AuthController::class, 'logout'])->name('logout');
+Route::get('article/{id}', [\App\Http\Controllers\UserController::class, 'article'])->name('article');
 // routes/web.php
 Route::get('/login', [\App\Http\Controllers\AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [\App\Http\Controllers\AuthController::class, 'login']);
+Route::post('/addcomment/{id}', [\App\Http\Controllers\UserController::class, 'addComment'])->name('addcomment');
+Route::post('/register', [\App\Http\Controllers\UserController::class, 'createuser'])->name('register');
+Route::get('/deletecomment/{id}', [\App\Http\Controllers\UserController::class, 'deletecomment'])->name('deletecomment');
+Route::post('/editcomment/{id}', [\App\Http\Controllers\UserController::class, 'editcomment'])->name('editcomment');
 

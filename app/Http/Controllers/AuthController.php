@@ -22,11 +22,16 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->route('index');
+            if(Auth::user()->role === 'admin')
+            {
+                return redirect()->route('index');
+            }else
+            return redirect()->route('blog');
         }
 
         return back()->with('error', 'Invalid login credentials.');
     }
+    
 
     public function logout(Request $request)
     {
