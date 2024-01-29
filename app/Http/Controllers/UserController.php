@@ -78,10 +78,10 @@ class UserController extends Controller
 function deletecomment(Request $request) {
   
     $comment = Comment::findOrFail($request->id);
-    if (gate::denies('crud-comment',$comment)) {
+    if (gate::denies('deletecomment',$comment)) {
         abort(403);
     }
-    $id=$comment->id_post;
+    
     $comment ->delete();
    
     return redirect()->back();
@@ -89,12 +89,12 @@ function deletecomment(Request $request) {
 function editcomment(Request $request) {
     
     $comment = Comment::findOrFail($request->id);
-    if (gate::denies('updatePost',$comment)) {
+    if (gate::denies('updatecomment',$comment)) {
         abort(403);
     }
     $comment->content=$request->content;
     $comment ->update();
-    $idpost=$comment->id_post;
+ 
     
     return redirect()->back();
 }

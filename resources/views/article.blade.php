@@ -89,11 +89,13 @@
         <div class="comment-options">
             <span>{{ $comment->content }} - {{ $comment->user ? $comment->user->user_name : 'unknown' }} - {{ $comment->created_at }}</span>
             <!-- Thêm nút Edit và Delete nếu là người đăng nhập và có quyền -->
-            @can('crud-comment',$comment)
+               @can('updatecomment',$comment)
                 <button class="edit-btn" onclick="showEditForm('{{ $comment->id }}');">Edit</button>
+                @endcan
+                @can('deletecomment',$comment)
                 <a onclick="return confirm('Are you sure?')" href="{{ route('deletecomment', ['id' => $comment->id]) }}" class="btn btn-danger">Delete</a>
-                
-            @endcan
+                @endcan
+            
         </div>
         <div class="edit-form" id="editForm_{{ $comment->id }}">
             <form method="post" action="{{ route('editcomment', ['id' => $comment->id]) }}">

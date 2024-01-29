@@ -24,10 +24,13 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Gate::define('crud-comment', function (User $user , Comment $comment) {
+        Gate::define('deletecomment', function (User $user , Comment $comment) {
             return $user->role == 'admin' || $user->id === $comment->id_user  ;
         });
         Gate::define('updatePost', function (User $user){return $user->role =='admin';});
         Gate::define('deletePost', function (User $user){return $user->role =='admin';});
+        Gate::define('updatecomment', function (User $user , Comment $comment) {
+            return  $user->id === $comment->id_user  ;
+        });
     }
 }
