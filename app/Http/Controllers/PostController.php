@@ -6,6 +6,7 @@ use App\Models\Post;
 use App\Models\User;
 use App\Models\History;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 class PostController extends Controller
 {
     function index() {
@@ -42,7 +43,11 @@ class PostController extends Controller
         return view('add');
     }
     function delete(Request $request) {
+        if (!$this->userCan('deletePost')) {
+            abort(403);
+        }
         $post = Post::findOrFail($request->id);
+       
         $history = new History();
         $history->id_post = $post->id;
         $history->id_admin = Auth::id();
@@ -57,7 +62,11 @@ class PostController extends Controller
     }
 
     function update(Request $request) {
+        if (!$this->userCan('deletePost')) {
+            abort(403);
+        }
         $post = Post::findOrFail($request->id);
+       
         $post->content = $request->content;
         $post->title = $request->title;
         $post->teaser = $request->teaser;

@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\Auth\ResetPasswordController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -34,4 +34,14 @@ Route::post('/addcomment/{id}', [\App\Http\Controllers\UserController::class, 'a
 Route::post('/register', [\App\Http\Controllers\UserController::class, 'createuser'])->name('register');
 Route::get('/deletecomment/{id}', [\App\Http\Controllers\UserController::class, 'deletecomment'])->name('deletecomment');
 Route::post('/editcomment/{id}', [\App\Http\Controllers\UserController::class, 'editcomment'])->name('editcomment');
+
+Route::get('restore/{id}', [\App\Http\Controllers\UserController::class, 'restoreComment'])->name('restoreComment');
+Route::get('/forceDelete/{id}', [\App\Http\Controllers\UserController::class, 'forceDelete'])->name('forceDelete');
+
+
+Route::get('forgot-password', [App\Http\Controllers\ResetPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+Route::post('forgot-password', [App\Http\Controllers\ResetPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+Route::get('reset-password/{token}', [App\Http\Controllers\ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+Route::post('reset-password', [App\Http\Controllers\ResetPasswordController::class, 'reset'])->name('password.update');
+
 

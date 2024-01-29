@@ -65,6 +65,7 @@
     <!-- Header Section -->
     <header>
         <h1>Welcome to My Website</h1>
+        <a class="nav-link active" aria-current="page" href="{{ route('blog')}}">Home</a>
     </header>
 
     <!-- Main Content Section -->
@@ -88,10 +89,11 @@
         <div class="comment-options">
             <span>{{ $comment->content }} - {{ $comment->user ? $comment->user->user_name : 'unknown' }} - {{ $comment->created_at }}</span>
             <!-- Thêm nút Edit và Delete nếu là người đăng nhập và có quyền -->
-            @if(Auth::check() && Auth::user()->id == $comment->id_user)
+            @can('crud-comment',$comment)
                 <button class="edit-btn" onclick="showEditForm('{{ $comment->id }}');">Edit</button>
                 <a onclick="return confirm('Are you sure?')" href="{{ route('deletecomment', ['id' => $comment->id]) }}" class="btn btn-danger">Delete</a>
-            @endif
+                
+            @endcan
         </div>
         <div class="edit-form" id="editForm_{{ $comment->id }}">
             <form method="post" action="{{ route('editcomment', ['id' => $comment->id]) }}">
@@ -109,6 +111,7 @@
 
             </ul>
         </div>
+        
 
         <div class="comment-form">
             <h3>Add a Comment</h3>
@@ -118,6 +121,22 @@
                 <button type="submit">Submit</button>
             </form>
         </div>
+        <ul>
+            
+        @foreach($commentstrashed as $commenttrashed)
+        
+            @if(Auth::check() && Auth::user()->id == $commenttrashed->id_user)
+            <li>  
+             <span> your hidden comment delete at {{$commenttrashed->deleted_at}}</span>            
+               
+                <a href="{{ route('restoreComment', ['id' => $commenttrashed->id]) }}" class="btn btn-success">Restore</a>
+                <a href="{{ route('forceDelete', ['id' => $commenttrashed->id]) }}" class="btn btn-success">forcedelete</a>
+                </li>
+                @endif
+            
+         @endforeach
+            
+            </ul>
     </section>
 
     <!-- Footer Section -->

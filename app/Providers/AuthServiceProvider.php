@@ -1,8 +1,11 @@
 <?php
 
 namespace App\Providers;
-
-// use Illuminate\Support\Facades\Gate;
+use App\Models\Post;
+use App\Models\User;
+use App\Models\Comment;
+use App\Policies\PostPolicy;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -13,7 +16,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        //
+        Post::class => PostPolicy::class,
     ];
 
     /**
@@ -21,6 +24,10 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Gate::define('crud-comment', function (User $user , Comment $comment) {
+            return $user->role == 'admin' || $user->id === $comment->id_user  ;
+        });
+        Gate::define('updatePost', function (User $user){return $user->role =='admin';});
+        Gate::define('deletePost', function (User $user){return $user->role =='admin';});
     }
 }

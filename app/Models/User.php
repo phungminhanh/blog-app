@@ -17,6 +17,7 @@ class User extends Authenticatable
         'password',
         'role',
         'stagename',
+        'email',
     ];
 
     protected $hidden = [
@@ -32,5 +33,23 @@ class User extends Authenticatable
     public function comments()
     {
         return $this->hasMany(Comment::class, 'id_user');
+    }
+    public function hasAccess(array $permissions) : bool
+    {
+        // check if the permission is available in any role
+        foreach ($this->roles as $role) {
+            if($role->hasAccess($permissions)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Checks if the user belongs to role.
+     */
+    public function inRole(string $roleSlug)
+    {
+        return $this->roles()->where('slug', $roleSlug)->count() == 1;
     }
 }

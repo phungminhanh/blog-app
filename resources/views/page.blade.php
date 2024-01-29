@@ -504,8 +504,10 @@ button:hover {
                   <label for="password">Password:</label>
                   <input type="password" id="password" name="password" required>
                   <br>
+                  
                   <button class="button-form" type="submit">Login</button>
                 </form>
+                <a href="{{ route('password.request') }}">Quên mật khẩu?</a>
                 <div class="toggle-btn" onclick="toggleForms()">Don't have an account? Register here.</div>
               </div>
         
@@ -520,6 +522,8 @@ button:hover {
                   <label for="password">Password:</label>
                   <input type="password" id="password" name="password"   required>
                   <br>
+                  <label for="email">Email:</label>
+                  <input type="email" id="email" name="email" required>
                   <button class="button-form" submit">Register</button>
                 </form>
                 <div class="toggle-btn" onclick="toggleForms()">Already have an account? Login here.</div>
@@ -632,6 +636,12 @@ button:hover {
                         <h3>{{ $post->title }}</h3>
                         <p>{{ $post->teaser }}</p>
                         <a href="{{ route('article', $post->id) }}" class="btn btn-primary"><button class="btn btn-primary">Read More</button></a> </div>
+                     @can('deletePost')
+                        <a onclick="return confirm('Are you sure?')" href="{{ route('delete', $post->id) }}" class="btn btn-danger">Delete</a>
+                       @endcan
+                     @can('updatePost')
+                       <a href="{{ route('edit', $post->id) }}" class="btn btn-primary">Update</a>
+                     @endcan
                 </div>
             @endforeach
                 
