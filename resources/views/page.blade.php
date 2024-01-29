@@ -412,7 +412,7 @@ button:hover {
   border: 1px solid #ccc;
   border-radius: 5px;
   outline: none;
-  width: 200px; /* Điều chỉnh chiều rộng của thanh input theo ý muốn */
+  width: 200px; 
 }
 
 #searchButton {
@@ -479,7 +479,7 @@ button:hover {
           
       
             @if(Auth::check())
-    <!-- Nếu người dùng đã đăng nhập -->
+   
     
         @csrf
         <a href="{{ route('logout') }}"> <button type="submit" class="btn btn-danger">Logout</button></a>

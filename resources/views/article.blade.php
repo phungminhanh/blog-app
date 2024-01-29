@@ -88,7 +88,7 @@
     <li>
         <div class="comment-options">
             <span>{{ $comment->content }} - {{ $comment->user ? $comment->user->user_name : 'unknown' }} - {{ $comment->created_at }}</span>
-            <!-- Thêm nút Edit và Delete nếu là người đăng nhập và có quyền -->
+         
                @can('updatecomment',$comment)
                 <button class="edit-btn" onclick="showEditForm('{{ $comment->id }}');">Edit</button>
                 @endcan
