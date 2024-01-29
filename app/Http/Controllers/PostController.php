@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Post;
 use App\Models\User;
+use App\Models\Comment;
 use App\Models\History;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -23,7 +24,7 @@ class PostController extends Controller
         $post->title = $request->title;
         $post->teaser = $request->teaser;
         if (Auth::check()) {
-            // Người dùng đã đăng nhập
+           
             $userId = Auth::id();
             $post->id_author= $userId;
         } 
@@ -43,11 +44,12 @@ class PostController extends Controller
         return view('add');
     }
     function delete(Request $request) {
-        if (!$this->userCan('deletePost')) {
+        if (Gate::denies('deletePost')) {
             abort(403);
         }
         $post = Post::findOrFail($request->id);
-       
+        Comment::where('id_post', $request->id)->forceDelete();
+
         $history = new History();
         $history->id_post = $post->id;
         $history->id_admin = Auth::id();
@@ -62,7 +64,7 @@ class PostController extends Controller
     }
 
     function update(Request $request) {
-        if (!$this->userCan('deletePost')) {
+        if (Gate::denies('deletePost')) {
             abort(403);
         }
         $post = Post::findOrFail($request->id);

@@ -78,25 +78,25 @@ class UserController extends Controller
 function deletecomment(Request $request) {
   
     $comment = Comment::findOrFail($request->id);
-    if (!$this->userCan('crud-comment',$comment)) {
+    if (gate::denies('crud-comment',$comment)) {
         abort(403);
     }
     $id=$comment->id_post;
     $comment ->delete();
    
-    return redirect()->route('article', ['id' =>$id]);
+    return redirect()->back();
 }
 function editcomment(Request $request) {
     
     $comment = Comment::findOrFail($request->id);
-    if (!$this->userCan('updatePost',$comment)) {
+    if (gate::denies('updatePost',$comment)) {
         abort(403);
     }
     $comment->content=$request->content;
     $comment ->update();
     $idpost=$comment->id_post;
     
-    return redirect()->route('article', ['id' =>$idpost]);
+    return redirect()->back();
 }
 public function restoreComment(Request $request)
 {

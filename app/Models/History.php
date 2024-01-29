@@ -18,8 +18,5 @@ class History extends Model
         return $this->belongsTo(User::class, 'id_admin');
     }
 
-    public function post()
-    {
-        return $this->belongsTo(Post::class, 'id_post');
-    }
+    
 }
