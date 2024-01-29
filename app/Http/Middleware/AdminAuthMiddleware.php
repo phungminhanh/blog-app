@@ -14,7 +14,7 @@ class AdminAuthMiddleware
             return $next($request);
         }
         return redirect('/login')->with('error', 'Bạn không có quyền truy cập.');
-        // Nếu không phải admin, chuyển hướng đến trang đăng nhập
+       
         
     }
     
