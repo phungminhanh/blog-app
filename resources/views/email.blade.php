@@ -6,7 +6,33 @@
     <title>Document</title>
 </head>
 <body>
-    <!-- resources/views/auth/passwords/email.blade.php -->
+@if($errors->any())
+        <div class="popup alert alert-danger" id="error-message">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    @if(session('success'))
+        <div class="popup alert alert-success" id="success-message">
+            {{ session('success') }}
+        </div>
+    @endif 
+
+    <!-- Include jQuery or any other JavaScript library -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- Your custom JavaScript code -->
+    <script>
+        // Display pop-up on page load
+        $(document).ready(function(){
+            $("#error-message, #success-message").fadeIn().delay(3000).fadeOut();
+        });
+    </script>
+
 <form method="POST" action="{{ route('password.email') }}">
     @csrf
     <label for="email">Email:</label>

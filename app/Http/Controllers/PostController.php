@@ -7,11 +7,13 @@ use App\Models\User;
 use App\Models\Comment;
 use App\Models\History;
 use Illuminate\Http\Request;
+use App\Models\Notification;
 use Illuminate\Support\Facades\Gate;
 class PostController extends Controller
 {
     function index() {
         $posts = Post::with('author')->paginate(5);
+     
         return view('adminboard', compact('posts'));
     }
     function Histories() {
@@ -96,5 +98,30 @@ class PostController extends Controller
 
         return view('yourpost', compact('posts'));
         
+    }
+    function deleteSelected(Request $request)
+    {
+        $x="d";
+        
+        if (Gate::denies('deletePost')) {
+            abort(403);
+        }
+    
+        $selectedPosts = $request->get('selectedPosts', []);
+         
+        foreach ($selectedPosts as $postId) {
+            $post = Post::findOrFail($postId);
+            Comment::where('id_post', $postId)->forceDelete();
+          
+            $history = new History();
+            $history->id_post = $post->id;
+            $history->id_admin = Auth::id();
+            $history->status = "delete";
+            $history->save();
+    
+            $post->delete();
+        }
+    
+        return redirect()->route('index')->with('success', 'Bài viết đã được xóa thành công.');
     }
 }

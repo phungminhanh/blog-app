@@ -19,38 +19,61 @@
                         </div>
                     </form>
                 </div>
-                <table class="table">
-                    <thead>
+         <form id="deleteForm" action=" {{route('deleteSelected')}}" method="POST">
+         @csrf
+
+
+        <button type="submit" onclick="return confirm('Bạn có chắc chắn muốn xóa các bài viết đã chọn không?')">Xóa Đã Chọn</button>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">
+                        <input type="checkbox" id="selectAllCheckbox" onchange="toggleCheckboxes()"  onclick="selectAll()">
+                    </th>
+                    <th scope="col">#</th>
+                    <th scope="col">title</th>
+                    <th scope="col">teaser</th>
+                    <th scope="col">created_at</th>
+                    <th scope="col">updated_at</th>
+                    <th scope="col">author</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($posts as $index => $post)
                     <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">title</th>
-                        <th scope="col">teaser</th>
-                        <th scope="col">created_at</th>
-                        <th scope="col">updated_at</th>
-                        <th scope="col">author</th>
-                        <th></th>
+                        <td><input type="checkbox" name="selectedPosts[]" value="{{ $post->id }}"></td>
+                        <th scope="row">{{ $index + 1 }}</th>
+                        <td>{{ $post->title }}</td>
+                        <td>{{ $post->teaser }}</td>
+                        <td>{{ $post->created_at }}</td>
+                        <td>{{ $post->updated_at }}</td>
+                        <td>{{ $post->author ? $post->author->stagename : 'unknown' }}</td>
+                        <td>
+                            <a onclick="return confirm('Are you sure?')" href="{{ route('delete', $post->id) }}" class="btn btn-danger">Delete</a>
+                            <a href="{{ route('edit', $post->id) }}" class="btn btn-primary">Update</a>
+                        </td>
                     </tr>
-                    </thead>
-                    <tbody>
-                    @foreach($posts as $index => $post)
-                        <tr>
-                            <th scope="row">{{ $index + 1 }}</th>
-                            <td>{{ $post->title }}</td>
-                            <td>{{ $post->teaser }}</td>
-                            <td>{{ $post->created_at }}</td>
-                            <td>{{ $post->updated_at }}</td>
-                            <td>{{ $post->author ? $post->author->stagename : 'unknown' }}</td>
-                            <td>
-                                <a onclick="return confirm('Are you sure?')" href="{{ route('delete', $post->id) }}" class="btn btn-danger">Delete</a>
-                                <a href="{{ route('edit', $post->id) }}" class="btn btn-primary">Update</a>
-                            </td>
-                        </tr>
-                    @endforeach
-                    </tbody>
-                </table>
+                @endforeach
+            </tbody>
+        </table>
+    </form>
                 {{ $posts->appends(request()->query()) }}
             </div>
         </div>
     </div>
+    <script>
+        function selectAll() {
+            const checkboxes = document.querySelectorAll('input[name="selectedPosts[]"]');
+            checkboxes.forEach(checkbox => checkbox.checked = true);
+        }
 
+        function toggleCheckboxes() {
+            const checkboxes = document.querySelectorAll('input[name="selectedPosts[]"]');
+            const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+
+            checkboxes.forEach(checkbox => checkbox.checked = selectAllCheckbox.checked);
+        }
+    </script>
 @endsection

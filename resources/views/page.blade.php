@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="{{ asset('style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.css" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
     <style>
       body {
     padding-top: 56px;
@@ -429,15 +430,42 @@ button:hover {
   background-color: #ddd;
 }
 
+.notification {
+        animation: fadeOut 3s forwards;
+    }
 
+    @keyframes fadeOut {
+        from {
+            opacity: 1;
+        }
+        to {
+            opacity: 0;
+        }
+    }
 
+    .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+       
+        .btn-secondary {
+        background: none; /* hoặc background: transparent; */
+    }
 
     </style>
 </head>
 <body>
     <header class="row ">
         <div class="col-lg-4 ma">
-            <H1>TiMENEWROMANS</H1>
+            <H1>TIMENEWROMANS</H1>
+            
      
         </div>
      <div class=" right col-lg-6" >
@@ -474,19 +502,70 @@ button:hover {
           </div>
       
           
+          <div>
+          @if(Auth::check() && $userUnreadNotificationsCount > 0)
+          <div style="background-color: white"><h6 style="color: red;">{{$userUnreadNotificationsCount}}</h6></div>
+          <div class="dropdown">
+    <button class="btn btn-secondary dropdown-toggle" type="button" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+        <span class="material-icons">notifications</span>
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="notificationDropdown">
+        @foreach($notifications as $notification)
+        <li><a class="dropdown-item" href="{{ route('article1', ['id1'=>$notification->id_post,'id2'=>$notification->id ]) }}">{{$notification->content}}</a></li>
+       @endforeach
+    </ul>
+</div>
           
+          @else
             <span  id="notificationIcon" class="material-icons">notifications</span>
-          
-      
+            
+            
+            @endif
+            </div>
+
+     
+</body>
+</html>
+
+@if($errors->any())
+        <div class="popup alert alert-danger" id="error-message">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    @if(session('success'))
+        <div class="popup alert alert-success" id="success-message">
+            {{ session('success') }}
+        </div>
+    @endif 
+
+    <!-- Include jQuery or any other JavaScript library -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- Your custom JavaScript code -->
+    <script>
+        // Display pop-up on page load
+        $(document).ready(function(){
+            $("#error-message, #success-message").fadeIn().delay(3000).fadeOut();
+        });
+    </script>
+
             @if(Auth::check())
    
+           
+
+
     
         @csrf
         <a href="{{ route('logout') }}"> <button type="submit" class="btn btn-danger">Logout</button></a>
     </form>
    @else
      
-       
+   
             <span id="loginIcon" onclick="togglePopup()" ><i class="fas fa-user"></i></span>
          
           <div id="popup">
@@ -601,24 +680,17 @@ button:hover {
             
             <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-inner">
+                    
+                    
+                    @foreach($top3Posts as $top3Post)
                     <div class="carousel-item active">
                         <div class="content-box">
-                            <h2>Top News</h2>
-                            <p>Content for Top News</p>
-                        </div>
+                        <h3>{{ $top3Post->title }}</h3>
+                        <p>{{ $top3Post->teaser }}</p>
+                        <a href="{{ route('article', $top3Post->id) }}" class="btn btn-primary"><button class="btn btn-primary">Read More</button></a> </div>
+                        
                     </div>
-                    <div class="carousel-item">
-                        <div class="content-box">
-                            <h2>Featured Story 1</h2>
-                            <p>Content for Featured Story 1</p>
-                        </div>
-                    </div>
-                    <div class="carousel-item">
-                        <div class="content-box">
-                            <h2>Featured Story 2</h2>
-                            <p>Content for Featured Story 2</p>
-                        </div>
-                    </div>
+                    @endforeach
                 </div>
                 <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -664,22 +736,20 @@ button:hover {
                         <div class="carousel-inner">
                             <div class="carousel-item active">
                                 <div class="content-box">
-                                    <h2>Another Slide</h2>
-                                    <p>Content for another slide</p>
+                                    <h2>latestPosts</h2>
+          
                                 </div>
                             </div>
-                            <div class="carousel-item">
-                                <div class="content-box">
-                                    <h2>Slide 2</h2>
-                                    <p>Content for Slide 2</p>
-                                </div>
-                            </div>
-                            <div class="carousel-item">
-                                <div class="content-box">
-                                    <h2>Slide 3</h2>
-                                    <p>Content for Slide 3</p>
-                                </div>
-                            </div>
+                            @foreach($latestPosts as $latestPost)
+                    <div class="carousel-item">
+                        <div class="content-box">
+                        <h3>{{ $latestPost->title }}</h3>
+                        <p>{{ $latestPost->teaser }}</p>
+                        <a href="{{ route('article', $latestPost->id) }}" class="btn btn-primary"><button class="btn btn-primary">Read More</button></a> </div>
+                        
+                    </div>
+                    @endforeach
+                            
                         </div>
                         <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel2" data-bs-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>

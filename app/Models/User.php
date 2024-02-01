@@ -52,4 +52,8 @@ class User extends Authenticatable
     {
         return $this->roles()->where('slug', $roleSlug)->count() == 1;
     }
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class, 'id_user');
+    }
 }

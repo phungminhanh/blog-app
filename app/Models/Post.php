@@ -16,6 +16,8 @@ class Post extends Model
         'content',
         'title',
         'id_author',
+        'view',
+        'view_daily'
     ];
 
     public function author()

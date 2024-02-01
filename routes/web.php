@@ -23,10 +23,12 @@ Route::middleware(['admin','auth'])->group(function () {
     Route::post('/store', [\App\Http\Controllers\PostController::class, 'store'])->name('store');
     Route::get('/histories', [\App\Http\Controllers\PostController::class, 'histories'])->name('histories');
     Route::get('/yourpost', [\App\Http\Controllers\PostController::class, 'PostbyAuthor'])->name('yourpost');
+    Route::post('/deleteSelected', [\App\Http\Controllers\PostController::class, 'deleteSelected'])->name('deleteSelected');
 });
 Route::get('/', [\App\Http\Controllers\UserController::class, 'getPost'])->name('blog');
 Route::get('/logout', [\App\Http\Controllers\AuthController::class, 'logout'])->name('logout');
 Route::get('article/{id}', [\App\Http\Controllers\UserController::class, 'article'])->name('article');
+Route::get('article1/{id1}/{id2}', [\App\Http\Controllers\UserController::class, 'article1'])->name('article1');
 // routes/web.php
 Route::get('/login', [\App\Http\Controllers\AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [\App\Http\Controllers\AuthController::class, 'login']);
@@ -43,5 +45,9 @@ Route::get('forgot-password', [App\Http\Controllers\ResetPasswordController::cla
 Route::post('forgot-password', [App\Http\Controllers\ResetPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
 Route::get('reset-password/{token}', [App\Http\Controllers\ResetPasswordController::class, 'showResetForm'])->name('password.reset');
 Route::post('reset-password', [App\Http\Controllers\ResetPasswordController::class, 'reset'])->name('password.update');
+Route::get('repcomment/{id}', [App\Http\Controllers\UserController::class, 'repComment'])->name('repcomment');
+Route::post('rep/{idUser}/{idPost}', [App\Http\Controllers\UserController::class, 'rep'])->name('rep');
+
+
 
 
