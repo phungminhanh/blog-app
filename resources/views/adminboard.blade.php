@@ -50,6 +50,9 @@
                         <td>{{ $post->created_at }}</td>
                         <td>{{ $post->updated_at }}</td>
                         <td>{{ $post->author ? $post->author->stagename : 'unknown' }}</td>
+                        <td>@if($post->thumbnail)
+    <img src="{{ asset('storage/' . $post->thumbnail) }}" alt="Ảnh sản phẩm">
+@endif</td>
                         <td>
                             <a onclick="return confirm('Are you sure?')" href="{{ route('delete', $post->id) }}" class="btn btn-danger">Delete</a>
                             <a href="{{ route('edit', $post->id) }}" class="btn btn-primary">Update</a>

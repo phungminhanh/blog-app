@@ -12,6 +12,17 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     
     <style>
+      .thumbnail-container {
+    overflow: hidden;
+    height: 200px; /* Đặt chiều cao mong muốn */
+}
+
+.thumbnail-img {
+    width: 100%; /* Ảnh sẽ căn chỉnh tự động theo chiều rộng của container */
+    height: auto;
+    object-fit: cover; /* Ẩn bớt phần thừa và giữ nguyên tỷ lệ */
+}
+
       body {
     padding-top: 56px;
 }
@@ -536,10 +547,14 @@ button:hover {
             </ul>
         </div>
     @endif
-
     @if(session('success'))
-        <div class="popup alert alert-success" id="success-message">
+        <div class="popup alert alert-success" id="success1-message">
             {{ session('success') }}
+        </div>
+    @endif 
+    @if(session('error'))
+        <div class="popup alert alert-success" id="success-message">
+            {{ session('error') }}
         </div>
     @endif 
 
@@ -550,7 +565,7 @@ button:hover {
     <script>
         // Display pop-up on page load
         $(document).ready(function(){
-            $("#error-message, #success-message").fadeIn().delay(3000).fadeOut();
+            $("#error-message, #success-message, #success1-message").fadeIn().delay(3000).fadeOut();
         });
     </script>
 
@@ -685,6 +700,11 @@ button:hover {
                     @foreach($top3Posts as $top3Post)
                     <div class="carousel-item active">
                         <div class="content-box">
+                        @if($top3Post->thumbnail)
+                <div class="thumbnail-container">
+                    <img class="thumbnail-img" src="{{ asset('storage/' . $top3Post->thumbnail) }}" alt="Ảnh sản phẩm">
+                </div>
+            @endif
                         <h3>{{ $top3Post->title }}</h3>
                         <p>{{ $top3Post->teaser }}</p>
                         <a href="{{ route('article', $top3Post->id) }}" class="btn btn-primary"><button class="btn btn-primary">Read More</button></a> </div>
@@ -703,19 +723,40 @@ button:hover {
             </div>
             <div class="row">
             @foreach($posts as $index => $post)
-                <div class="col-md-6">
-                    <div class="content-box">
-                        <h3>{{ $post->title }}</h3>
-                        <p>{{ $post->teaser }}</p>
-                        <a href="{{ route('article', $post->id) }}" class="btn btn-primary"><button class="btn btn-primary">Read More</button></a> </div>
-                     @can('deletePost')
-                        <a onclick="return confirm('Are you sure?')" href="{{ route('delete', $post->id) }}" class="btn btn-danger">Delete</a>
-                       @endcan
-                     @can('updatePost')
-                       <a href="{{ route('edit', $post->id) }}" class="btn btn-primary">Update</a>
-                     @endcan
-                </div>
-            @endforeach
+            <div class="col-md-6">
+    <div class="content-box">
+        <h3>{{ $post->title }}</h3>
+        
+        @if($post->thumbnail)
+            <div class="thumbnail-container">
+                <img class="thumbnail-img" src="{{ asset('storage/' . $post->thumbnail) }}" alt="Ảnh sản phẩm">
+            </div>
+        @endif
+
+        <p>{{ $post->teaser }}</p>
+        
+        <a href="{{ route('article', $post->id) }}" class="btn btn-primary">Read More</a>
+
+        @can('deletePost')
+            <a onclick="return confirm('Are you sure?')" href="{{ route('delete', $post->id) }}" class="btn btn-danger">Delete</a>
+        @endcan
+
+        @can('updatePost')
+            <a href="{{ route('edit', $post->id) }}" class="btn btn-warning">Update</a>
+        @endcan
+
+        @can('admin')
+            @if($post->publish_at)
+                <a href="{{ route('unpublish', $post->id) }}" class="btn btn-info">Unpublish</a>
+            @else
+                <a href="{{ route('publish', $post->id) }}" class="btn btn-success">Publish</a>
+            @endif
+        @endcan
+    </div>
+</div>
+
+@endforeach
+
                 
             </div>
             {{ $posts->appends(request()->query()) }}
@@ -743,6 +784,11 @@ button:hover {
                             @foreach($latestPosts as $latestPost)
                     <div class="carousel-item">
                         <div class="content-box">
+                        @if($latestPost->thumbnail)
+                <div class="thumbnail-container">
+                    <img class="thumbnail-img" src="{{ asset('storage/' . $latestPost->thumbnail) }}" alt="Ảnh sản phẩm">
+                </div>
+            @endif
                         <h3>{{ $latestPost->title }}</h3>
                         <p>{{ $latestPost->teaser }}</p>
                         <a href="{{ route('article', $latestPost->id) }}" class="btn btn-primary"><button class="btn btn-primary">Read More</button></a> </div>

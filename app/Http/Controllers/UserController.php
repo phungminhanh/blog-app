@@ -33,14 +33,14 @@ class UserController extends Controller
 }
     function getPost() {
         
-        $latestPosts = Post::orderBy('created_at', 'desc')
+        $latestPosts = Post::whereNotNull('publish_at')->orderBy('created_at', 'desc')
                     ->orderBy('view_daily', 'desc')
                     ->take(3)
                     ->get();
-       $top3Posts = Post::orderBy('view_daily', 'desc')
+       $top3Posts = Post::whereNotNull('publish_at')->orderBy('view_daily', 'desc')
                   ->take(3)
                   ->get();
-        $posts = Post::paginate(5);
+                  $posts = Post::whereNotNull('publish_at')->paginate(5);
         if(!Auth::check())
         {
             return view('page', compact('posts','latestPosts','top3Posts'));
@@ -238,5 +238,76 @@ function rep(Request $request)
     $notification->save();
     return redirect()->back();
 }
+function listuser() {
+    $users = User::all();
+    return view('listuser', ['users' => $users]);
+}
+public function destroy(Request $request)
+    {
+        if (Gate::denies('admin')) {
+            abort(403);
+        }
+      
+        // Xóa người dùng và liên quan đến lịch sử comment, bài viết và thông báo
+        $user =User::with('comments', 'posts', 'notifications','histories')->findOrFail($request->id);
+     if ($user)
+      {
+        
+        $user->notifications()->delete();
+        $user->comments()->forceDelete();
+        $user->histories()->delete();
+        $user->posts()->delete();
+        
+        $user->delete();
+        return redirect()->route('listuser');
+      }
+      return dd('not found');
+    }
 
+    public function updateRole(Request $request, $id)
+    {
+        if (Gate::denies('admin')) {
+            abort(403);
+        }
+        // Cập nhật vai trò của người dùng
+        $user = User::findOrFail($id);
+        $user->update(['role' => $request->input('role')]);
+
+        // Chuyển hướng về trang danh sách người dùng
+        return redirect()->route('listuser');
+    }
+    public function filter(Request $request)
+    {
+        $role = $request->input('role');
+        $created_at = $request->input('created_at');
+        $user_name = $request->input('user_name');
+
+        $users = User::when($role, function ($query) use ($role) {
+                return $query->where('role', $role);
+            })
+            ->when($created_at, function ($query) use ($created_at) {
+                return $query->whereDate('created_at', $created_at);
+            })
+            ->when($user_name, function ($query) use ($user_name) {
+                return $query->where('user_name', 'like', "%{$user_name}%");
+            })
+            ->get();
+
+        return view('listuser', ['users' => $users]);
+    }
+    public function upload(Request $request)
+    {
+        $uploadedImages = $request->file('upload');
+
+        $uploadedImageUrls = [];
+
+        foreach ($uploadedImages as $uploadedImage) {
+            $fileName = time() . '_' . $uploadedImage->getClientOriginalName();
+            $uploadedImage->move(public_path('uploads/ckeditor'), $fileName);
+            $url = asset('uploads/ckeditor/' . $fileName);
+            $uploadedImageUrls[] = $url;
+        }
+
+        return response()->json(['uploaded' => true, 'urls' => $uploadedImageUrls]);
+    }
 }

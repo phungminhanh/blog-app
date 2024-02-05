@@ -9,6 +9,8 @@ use App\Models\History;
 use Illuminate\Http\Request;
 use App\Models\Notification;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 class PostController extends Controller
 {
     function index() {
@@ -22,6 +24,51 @@ class PostController extends Controller
     }
     function store(Request $request) {
         $post = new Post();
+        
+        $rules = [
+            'title' => 'required|string|max:255',
+            'teaser' => 'required|string|max:255',
+            'content' => 'required|string',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Thêm validation cho ảnh
+        ];
+    
+        // Tạo các thông báo lỗi tùy chọn
+        $messages = [
+            'title.required' => 'Tiêu đề không được để trống.',
+            'teaser.required' => 'Mô tả ngắn không được để trống.',
+            'content.required' => 'Nội dung không được để trống.',
+            'image.required' => 'Vui lòng chọn một hình ảnh.',
+            'image.image' => 'File phải là hình ảnh.',
+            'image.mimes' => 'Hình ảnh phải có định dạng jpeg, png, jpg hoặc gif.',
+            'image.max' => 'Dung lượng hình ảnh không được vượt quá 2MB.',
+        ];
+    
+        // Kiểm tra validation
+        $validator = Validator::make($request->all(), $rules, $messages);
+    
+        // Nếu có lỗi validation
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+      
+        
+
+        if ($request->hasFile('image')) {
+            $postTitle = $request->title;
+            $PostImagePath = 'public/products/' .  $postTitle;
+
+   
+         if (!Storage::exists( $PostImagePath)) {
+        Storage::makeDirectory( $PostImagePath);
+    }
+
+   
+        $imagePath = $request->file('image')->store( $PostImagePath, 'public');
+            
+            $post->thumbnail = $imagePath;
+          
+         
+        }
         $post->content = $request->content;
         $post->title = $request->title;
         $post->teaser = $request->teaser;
@@ -61,7 +108,8 @@ class PostController extends Controller
         return redirect()->route('index');
     }
     function edit(Request $request) {
-        $post = Post::findOrFail($request->id);   
+        $post = Post::findOrFail($request->id); 
+
         return view('edit', compact('post'));
     }
 
@@ -70,7 +118,24 @@ class PostController extends Controller
             abort(403);
         }
         $post = Post::findOrFail($request->id);
-       
+       if ($request->hasFile('image')) {
+        // Xóa ảnh cũ
+        Storage::disk('public')->delete($post->thumbnail);
+      
+            $postTitle = $request->title;
+            $PostImagePath = 'public/products/' .  $postTitle;
+
+   
+         if (!Storage::exists( $PostImagePath)) {
+        Storage::makeDirectory( $PostImagePath);
+    }
+
+   
+        $imagePath = $request->file('image')->store( $PostImagePath, 'public');
+            
+            $post->thumbnail = $imagePath;
+        
+    }
         $post->content = $request->content;
         $post->title = $request->title;
         $post->teaser = $request->teaser;
@@ -94,11 +159,40 @@ class PostController extends Controller
         return view('adminboard', compact('posts'));
     }
     function PostbyAuthor() {
-        $posts = Post::where('id_author', Auth::id())->paginate(5);
+        $posts = Post::whereNull('publish_at')->paginate(10);
 
         return view('yourpost', compact('posts'));
         
+    } 
+    function publish(Request $request) {
+       
+        $post = Post::findOrFail($request->id);
+
+        if ($post) {
+            $post->publish_at= now(); 
+            $post->save();
+       
+            return redirect()->back()->with('success', ' successfully.');
+        } else {
+            return redirect()->back()->with('error', 'post not found.');
+        }
+        
     }
+    function unpublish(Request $request) {
+       
+        $post = Post::findOrFail($request->id);
+
+        if ($post) {
+            $post->publish_at= null; 
+            $post->save();
+       
+            return redirect()->back()->with('success', ' successfully.');
+        } else {
+            return redirect()->back()->with('error', 'post not found.');
+        }
+        
+    }
+   
     function deleteSelected(Request $request)
     {
         $x="d";
@@ -108,7 +202,7 @@ class PostController extends Controller
         }
     
         $selectedPosts = $request->get('selectedPosts', []);
-         
+        
         foreach ($selectedPosts as $postId) {
             $post = Post::findOrFail($postId);
             Comment::where('id_post', $postId)->forceDelete();
@@ -120,6 +214,7 @@ class PostController extends Controller
             $history->save();
     
             $post->delete();
+            
         }
     
         return redirect()->route('index')->with('success', 'Bài viết đã được xóa thành công.');

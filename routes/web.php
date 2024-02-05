@@ -1,5 +1,5 @@
 <?php
-
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\ResetPasswordController;
 /*
@@ -24,7 +24,20 @@ Route::middleware(['admin','auth'])->group(function () {
     Route::get('/histories', [\App\Http\Controllers\PostController::class, 'histories'])->name('histories');
     Route::get('/yourpost', [\App\Http\Controllers\PostController::class, 'PostbyAuthor'])->name('yourpost');
     Route::post('/deleteSelected', [\App\Http\Controllers\PostController::class, 'deleteSelected'])->name('deleteSelected');
+
 });
+Route::middleware(['ADMIN','auth'])->group(function () {
+    Route::get('/listuser', [\App\Http\Controllers\UserController::class, 'listuser'])->name('listuser');
+    Route::get('/user/filter', [\App\Http\Controllers\UserController::class, 'filter'])->name('user.filter');
+    Route::get('/users/{id}', [\App\Http\Controllers\UserController::class, 'destroy'])->name('users.delete');
+    Route::get('/yourpost', [\App\Http\Controllers\PostController::class, 'PostbyAuthor'])->name('yourpost');
+    Route::get('/{id}/publish', [\App\Http\Controllers\PostController::class, 'publish'])->name('publish');
+    Route::patch('/users/{id}/update-role', [\App\Http\Controllers\UserController::class, 'updateRole'])->name('update.role');
+    Route::get('/{id}/unpublish', [\App\Http\Controllers\PostController::class, 'unpublish'])->name('unpublish');
+
+});
+Route::post('image-upload', [\App\Http\Controllers\ImageUploadController::class, 'storeImage'])->name('image.upload');
+
 Route::get('/', [\App\Http\Controllers\UserController::class, 'getPost'])->name('blog');
 Route::get('/logout', [\App\Http\Controllers\AuthController::class, 'logout'])->name('logout');
 Route::get('article/{id}', [\App\Http\Controllers\UserController::class, 'article'])->name('article');
@@ -47,6 +60,18 @@ Route::get('reset-password/{token}', [App\Http\Controllers\ResetPasswordControll
 Route::post('reset-password', [App\Http\Controllers\ResetPasswordController::class, 'reset'])->name('password.update');
 Route::get('repcomment/{id}', [App\Http\Controllers\UserController::class, 'repComment'])->name('repcomment');
 Route::post('rep/{idUser}/{idPost}', [App\Http\Controllers\UserController::class, 'rep'])->name('rep');
+Route::get('create', [App\Http\Controllers\DocumentController::class, 'create']);
+Route::get('upload-file', function() {
+    Storage::disk('google')->put('google-drive.txt', 'Google Drive As Filesystem In Laravel (ManhDanBlogs)');
+    dd('Đã upload file lên google drive thành công!');
+});
+Route::get('list-document', function(){
+   
+   $driveService = Storage::disk('google');
+   $file = $driveService->files->get();
+
+    return $file;
+});
 
 
 

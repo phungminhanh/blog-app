@@ -34,6 +34,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(Comment::class, 'id_user');
     }
+    public function histories()
+    {
+        return $this->hasMany(History::class, 'id_admin'); // Thay 'user_id' bằng khóa ngoại thích hợp trong bảng History
+    }
     public function hasAccess(array $permissions) : bool
     {
         // check if the permission is available in any role
