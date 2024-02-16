@@ -71,10 +71,11 @@
     <form action="{{ route('user.filter') }}" method="GET">
         <label for="role">Role:</label>
         <select name="role">
-            <option value="admin">Admin</option>
-            <option value="user">User</option>
-            <option value="editor">Editor</option>
-        </select>
+    <option value="">All Roles</option>
+    <option value="admin">Admin</option>
+    <option value="user">User</option>
+    <option value="editor">Editor</option>
+</select>
 
         <label for="created_at">Created At:</label>
         <input type="date" name="created_at">
@@ -122,6 +123,7 @@
                                 
                             
                         </td>
+                        <td><a href="{{ route('edituser',$user->id) }}" class="btn btn-danger" ><button >edit user </button></a></td>
                     </tr>
                 @endforeach
             </tbody>

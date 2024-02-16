@@ -24,7 +24,8 @@ Route::middleware(['admin','auth'])->group(function () {
     Route::get('/histories', [\App\Http\Controllers\PostController::class, 'histories'])->name('histories');
     Route::get('/yourpost', [\App\Http\Controllers\PostController::class, 'PostbyAuthor'])->name('yourpost');
     Route::post('/deleteSelected', [\App\Http\Controllers\PostController::class, 'deleteSelected'])->name('deleteSelected');
-
+    Route::get('/post/{id}', [\App\Http\Controllers\PostController::class, 'show'])->name('show');
+    Route::get('/listcomment', [\App\Http\Controllers\PostController::class, 'listcomment'])->name('listcomment');
 });
 Route::middleware(['ADMIN','auth'])->group(function () {
     Route::get('/listuser', [\App\Http\Controllers\UserController::class, 'listuser'])->name('listuser');
@@ -34,9 +35,18 @@ Route::middleware(['ADMIN','auth'])->group(function () {
     Route::get('/{id}/publish', [\App\Http\Controllers\PostController::class, 'publish'])->name('publish');
     Route::patch('/users/{id}/update-role', [\App\Http\Controllers\UserController::class, 'updateRole'])->name('update.role');
     Route::get('/{id}/unpublish', [\App\Http\Controllers\PostController::class, 'unpublish'])->name('unpublish');
+    Route::get('/createuser', [\App\Http\Controllers\UserController::class, 'create'])->name('createuser');
+    Route::post('/users', [\App\Http\Controllers\UserController::class, 'store'])->name('users.store');
+    Route::get('/edituser/{id}', [\App\Http\Controllers\UserController::class, 'edit'])->name('edituser');
+    Route::put('/updateuser/{id}', [\App\Http\Controllers\UserController::class, 'update'])->name('users.update');
+    
+    
+
 
 });
+Route::get('/delete-account/{id}', [\App\Http\Controllers\UserController::class, 'confirmDelete'])->name('delete.account');
 Route::post('image-upload', [\App\Http\Controllers\ImageUploadController::class, 'storeImage'])->name('image.upload');
+
 
 Route::get('/', [\App\Http\Controllers\UserController::class, 'getPost'])->name('blog');
 Route::get('/logout', [\App\Http\Controllers\AuthController::class, 'logout'])->name('logout');
@@ -54,6 +64,9 @@ Route::get('restore/{id}', [\App\Http\Controllers\UserController::class, 'restor
 Route::get('/forceDelete/{id}', [\App\Http\Controllers\UserController::class, 'forceDelete'])->name('forceDelete');
 
 
+Route::get('/user/profile', [\App\Http\Controllers\UserController::class, 'showProfile'])->name('user.profile');
+Route::post('/user/profiles', [\App\Http\Controllers\UserController::class, 'updateProfile'])->name('user.profile.update');
+Route::post('/user/profilee', [\App\Http\Controllers\UserController::class, 'updatePassword'])->name('password.update');
 Route::get('forgot-password', [App\Http\Controllers\ResetPasswordController::class, 'showLinkRequestForm'])->name('password.request');
 Route::post('forgot-password', [App\Http\Controllers\ResetPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
 Route::get('reset-password/{token}', [App\Http\Controllers\ResetPasswordController::class, 'showResetForm'])->name('password.reset');

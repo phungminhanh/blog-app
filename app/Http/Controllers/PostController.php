@@ -18,6 +18,12 @@ class PostController extends Controller
      
         return view('adminboard', compact('posts'));
     }
+    function listcomment() {
+        $comments = Comment::with('post', 'user')->get();
+        $commentstrashed=Comment::onlyTrashed()->get();
+  
+        return view('listcomment', compact('comments','commentstrashed'));
+    }
     function Histories() {
         $histories = History::paginate(10);
         return view('histories', compact('histories'));
@@ -219,4 +225,9 @@ class PostController extends Controller
     
         return redirect()->route('index')->with('success', 'Bài viết đã được xóa thành công.');
     }
+    public function show($id)
+{
+    $post = Post::findOrFail($id);
+    return view('show', compact('post'));
+}
 }

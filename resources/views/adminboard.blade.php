@@ -45,13 +45,13 @@
                     <tr>
                         <td><input type="checkbox" name="selectedPosts[]" value="{{ $post->id }}"></td>
                         <th scope="row">{{ $index + 1 }}</th>
-                        <td>{{ $post->title }}</td>
+                        <td><a href="{{ route('show', $post->id) }}" > {{ $post->title }}</a></td>
                         <td>{{ $post->teaser }}</td>
                         <td>{{ $post->created_at }}</td>
                         <td>{{ $post->updated_at }}</td>
                         <td>{{ $post->author ? $post->author->stagename : 'unknown' }}</td>
                         <td>@if($post->thumbnail)
-    <img src="{{ asset('storage/' . $post->thumbnail) }}" alt="Ảnh sản phẩm">
+    <img src="{{ asset('storage/' . $post->thumbnail) }}" alt="Ảnh sản phẩm" style="max-width: 88.75px; max-height: 60px;">
 @endif</td>
                         <td>
                             <a onclick="return confirm('Are you sure?')" href="{{ route('delete', $post->id) }}" class="btn btn-danger">Delete</a>

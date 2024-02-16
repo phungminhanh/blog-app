@@ -19,6 +19,12 @@
     <script src="{{ asset('ckeditor5-build-classic/ckeditor.js') }}"></script>
    
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+          #post-content img {
+    max-width: 100%; /* Ảnh sẽ không vượt quá chiều rộng của phần tử chứa */
+    height: auto; /* Giữ tỷ lệ khung hình ban đầu */
+}
+    </style>
 </head>
 <body>
 <div class="container">
@@ -42,8 +48,12 @@
                             <li><a class="dropdown-item" href="{{ route('add') }}"> Add post </a></li>
                             @can('admin')
                             <li><a class="dropdown-item" href="{{ route('yourpost') }}">Unpublish posts</a></li>
+                            <li><a href="{{ route('createuser') }}" class="dropdown-item" >Thêm Người Dùng</a>
+                            </li>
                             @endcan
                             <li><a class="dropdown-item" href="{{ route('histories') }}">History</a></li>
+                            <li><a href="{{ route('listcomment') }}" class="dropdown-item" >comment</a>
+                            </li>
                         </ul>
                     </li>
                     @can('admin')

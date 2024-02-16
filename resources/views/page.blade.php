@@ -10,7 +10,17 @@
     <link rel="stylesheet" href="{{ asset('style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.css" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/media_query.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap.css') }}"> 
     
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/animate.css') }}">
+    <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet"> 
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/owl.carousel.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/owl.theme.default.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/style_1.css') }}"> 
+
+    <script src="{{ asset('js/modernizr-3.5.0.min.js') }}"></script>
     <style>
       .thumbnail-container {
     overflow: hidden;
@@ -496,7 +506,7 @@ button:hover {
         </div> 
         <script>
           function onoffFunction() {
-              var button = document.getElementById("toggleButton1");
+              var button = document.getElementById("toggleButton1");z
               if (button.innerHTML === "Off") {
                   button.innerHTML = "On";
                   getWeatherByLocation();
@@ -577,7 +587,8 @@ button:hover {
     
         @csrf
         <a href="{{ route('logout') }}"> <button type="submit" class="btn btn-danger">Logout</button></a>
-    </form>
+        <a href="{{ route('user.profile') }}">Chỉnh sửa thông tin</a>
+      </form>
    @else
      
    
@@ -655,6 +666,7 @@ button:hover {
         </div>
         
     </header>
+    
 <nav id="navbar" class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">Home</a>
@@ -688,56 +700,29 @@ button:hover {
         </div>
     </div>
 </nav>
-<div class="container main-section">
-    <div class="row">
-        
-        <div class="col-md-8">
-            
-            <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                    
-                    
-                    @foreach($top3Posts as $top3Post)
-                    <div class="carousel-item active">
-                        <div class="content-box">
-                        @if($top3Post->thumbnail)
-                <div class="thumbnail-container">
-                    <img class="thumbnail-img" src="{{ asset('storage/' . $top3Post->thumbnail) }}" alt="Ảnh sản phẩm">
+<div class="container-fluid pb-4 pt-4 paddding">
+    <div class="container paddding">
+        <div class="row mx-0">
+            <div class="col-md-8 animate-box fadeInLeft animated-fast" data-animate-effect="fadeInLeft">
+                <div>
+                    <div class="fh5co_heading fh5co_heading_border_bottom py-2 mb-4">News</div>
                 </div>
-            @endif
-                        <h3>{{ $top3Post->title }}</h3>
-                        <p>{{ $top3Post->teaser }}</p>
-                        <a href="{{ route('article', $top3Post->id) }}" class="btn btn-primary"><button class="btn btn-primary">Read More</button></a> </div>
-                        
+               
+                
+                @foreach($posts as $index => $post)
+                <div class="row pb-4">
+                    <div class="col-md-5">
+                        <div class="fh5co_hover_news_img">
+                            <div class="fh5co_news_img"><img src="{{ asset('storage/' . $post->thumbnail) }}" style="max-width: 390px; max-height: 260px;" alt=""></div>
+                            <div></div>
+                        </div>
                     </div>
-                    @endforeach
-                </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
-                </button>
-            </div>
-            <div class="row">
-            @foreach($posts as $index => $post)
-            <div class="col-md-6">
-    <div class="content-box">
-        <h3>{{ $post->title }}</h3>
-        
-        @if($post->thumbnail)
-            <div class="thumbnail-container">
-                <img class="thumbnail-img" src="{{ asset('storage/' . $post->thumbnail) }}" alt="Ảnh sản phẩm">
-            </div>
-        @endif
-
-        <p>{{ $post->teaser }}</p>
-        
-        <a href="{{ route('article', $post->id) }}" class="btn btn-primary">Read More</a>
-
-        @can('deletePost')
+                    <div class="col-md-7 animate-box fadeInUp animated-fast">
+                        <a href="{{ route('article', $post->id) }}" class="fh5co_magna py-2">{{ $post->title }} </a> <a href="#" class="fh5co_mini_time py-3"> {{ $post->author->stagename }} -
+                        {{ $post->created_at }} </a>
+                        <div class="fh5co_consectetur"> {{ $post->teaser }}
+                        </div>
+                        @can('deletePost')
             <a onclick="return confirm('Are you sure?')" href="{{ route('delete', $post->id) }}" class="btn btn-danger">Delete</a>
         @endcan
 
@@ -752,60 +737,69 @@ button:hover {
                 <a href="{{ route('publish', $post->id) }}" class="btn btn-success">Publish</a>
             @endif
         @endcan
+                    </div>
+                </div>
+                @endforeach
+               
+                
+                
+                
+            </div>
+            <div class="col-md-3 animate-box fadeInRight animated-fast" data-animate-effect="fadeInRight">
+                <div>
+                    <div class="fh5co_heading fh5co_heading_border_bottom py-2 mb-4">Lastest</div>
+                </div>
+                <div class="clearfix"></div>
+               
+                @foreach($latestPosts as $latestPost)
+                <div class="row pb-3">
+                @if( $latestPost->thumbnail)
+                    <div class="col-5 align-self-center">
+                    
+                        <img  src="{{ asset('storage/' .  $latestPost->thumbnail) }}" style="max-width: 88.75px; max-height: 60px;" alt="img" class="fh5co_most_trading">
+                    </div>
+                    @endif
+                    <div class="col-7 paddding">
+                    <a href="{{ route('article',  $latestPost->id) }}">  <div class="most_fh5co_treding_font"> {{  $latestPost->title }}</div></a>
+                        <div class="most_fh5co_treding_font_123"> {{  $latestPost->created_at }}</div>
+                    </div>
+                </div>
+                @endforeach
+                <div>
+                    <div class="fh5co_heading fh5co_heading_border_bottom pt-3 py-2 mb-4">Most Popular</div>
+                </div>
+               
+                 @foreach($top3Posts as $top3Post)
+                <div class="row pb-3">
+                @if($top3Post->thumbnail)
+                    <div class="col-5 align-self-center">
+                    
+                        <img  src="{{ asset('storage/' . $top3Post->thumbnail) }}" style="max-width: 88.75px; max-height: 60px;" alt="img" class="fh5co_most_trading">
+                    </div>
+                    @endif
+                    <div class="col-7 paddding">
+                    <a href="{{ route('article', $top3Post->id) }}">  <div class="most_fh5co_treding_font"> {{ $top3Post->title }}</div></a>
+                        <div class="most_fh5co_treding_font_123"> {{ $top3Post->created_at }}</div>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </div>
+        <div class="row mx-0">
+            <div class="col-12 text-center pb-4 pt-4">
+            @if ($posts->lastPage() > 1)
+                    <a href="{{ $posts->previousPageUrl() }}" class="btn_mange_pagging"><i class="fa fa-long-arrow-left"></i>&nbsp;&nbsp; Previous</a>
+                    @for ($i = 1; $i <= $posts->lastPage(); $i++)
+                        <a href="{{ $posts->url($i) }}" class="btn_pagging {{ $posts->currentPage() == $i ? 'active' : '' }}">{{ $i }}</a>
+                    @endfor
+                    <a href="{{ $posts->nextPageUrl() }}" class="btn_mange_pagging">Next <i class="fa fa-long-arrow-right"></i>&nbsp;&nbsp; </a>
+                @endif
+             </div>
+        </div>
     </div>
 </div>
 
-@endforeach
 
-                
-            </div>
-            {{ $posts->appends(request()->query()) }}
-            <div class="content-box">Latest News</div>
-           </div>
-           <div class="col-md-4">
-            <div class="side-section">
-                <h2>Opinions</h2>
-                <div class="content-box">Opinion 1</div>
-                <div class="content-box">Opinion 2</div>
-            </div>
-        
-        </div>
-       
-                    
-                    <!-- Carousel Slide 2 -->
-                    <div id="myCarousel2" class="carousel slide" data-bs-ride="carousel">
-                        <div class="carousel-inner">
-                            <div class="carousel-item active">
-                                <div class="content-box">
-                                    <h2>latestPosts</h2>
-          
-                                </div>
-                            </div>
-                            @foreach($latestPosts as $latestPost)
-                    <div class="carousel-item">
-                        <div class="content-box">
-                        @if($latestPost->thumbnail)
-                <div class="thumbnail-container">
-                    <img class="thumbnail-img" src="{{ asset('storage/' . $latestPost->thumbnail) }}" alt="Ảnh sản phẩm">
-                </div>
-            @endif
-                        <h3>{{ $latestPost->title }}</h3>
-                        <p>{{ $latestPost->teaser }}</p>
-                        <a href="{{ route('article', $latestPost->id) }}" class="btn btn-primary"><button class="btn btn-primary">Read More</button></a> </div>
-                        
-                    </div>
-                    @endforeach
-                            
-                        </div>
-                        <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel2" data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Previous</span>
-                        </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#myCarousel2" data-bs-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Next</span>
-                        </button>
-                    </div>
                     
                    
                     

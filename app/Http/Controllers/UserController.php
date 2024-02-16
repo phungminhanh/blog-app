@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Carbon;
+use App\Mail\DeleteAccountConfirmation;
+use Illuminate\Support\Facades\Mail;
 class UserController extends Controller
 {
 
@@ -35,12 +37,16 @@ class UserController extends Controller
         
         $latestPosts = Post::whereNotNull('publish_at')->orderBy('created_at', 'desc')
                     ->orderBy('view_daily', 'desc')
-                    ->take(3)
+                    ->take(5)
                     ->get();
-       $top3Posts = Post::whereNotNull('publish_at')->orderBy('view_daily', 'desc')
-                  ->take(3)
-                  ->get();
-                  $posts = Post::whereNotNull('publish_at')->paginate(5);
+                    $currentDate = Carbon::now()->toDateString();
+                    $top3Posts = Post::whereNotNull('publish_at')
+                    ->whereDate('daily_view_latest', $currentDate)
+                    ->orderBy('view_daily', 'desc')
+                    ->take(5)
+                    ->get();
+                  $posts = Post::whereNotNull('publish_at')->with('author')->paginate(5);
+        
         if(!Auth::check())
         {
             return view('page', compact('posts','latestPosts','top3Posts'));
@@ -59,6 +65,16 @@ class UserController extends Controller
         return view('page', compact('posts','userUnreadNotificationsCount','notifications','latestPosts','top3Posts'));
     }
     function article(Request $request) {
+        $latestPosts = Post::whereNotNull('publish_at')->orderBy('created_at', 'desc')
+        ->orderBy('view_daily', 'desc')
+        ->take(5)
+        ->get();
+        $currentDate = Carbon::now()->toDateString();
+        $top3Posts = Post::whereNotNull('publish_at')
+        ->whereDate('daily_view_latest', $currentDate)
+        ->orderBy('view_daily', 'desc')
+        ->take(3)
+        ->get();
         $post = Post::findOrFail($request->id);   
         
         $comments = Comment::where('id_post', $request->id)->with('user')->get();
@@ -79,8 +95,18 @@ class UserController extends Controller
            $post->update();
        }
       
-        return view('article', compact('post','comments','commentstrashed'));
+        return view('article', compact('post','comments','commentstrashed','latestPosts','top3Posts'));
     }function article1(Request $request) {
+        $latestPosts = Post::whereNotNull('publish_at')->orderBy('created_at', 'desc')
+        ->orderBy('view_daily', 'desc')
+        ->take(5)
+        ->get();
+        $currentDate = Carbon::now()->toDateString();
+        $top3Posts = Post::whereNotNull('publish_at')
+        ->whereDate('daily_view_latest', $currentDate)
+        ->orderBy('view_daily', 'desc')
+        ->take(3)
+        ->get();
         $post = Post::findOrFail($request->id1);   
         $comments = Comment::where('id_post', $request->id1)->with('user')->get();
         $commentstrashed=Comment::where('id_post',$request->id1)->onlyTrashed()->get();
@@ -104,8 +130,34 @@ class UserController extends Controller
         $post->update();
     }
        
-        return view('article', compact('post','comments','commentstrashed'));
+        return view('article', compact('post','comments','commentstrashed','top3Posts','latestPosts'));
     }
+    public function create()
+{
+    return view('create');
+}
+
+public function store(Request $request)
+{
+    // Validate input
+    $request->validate([
+        'user_name' => 'required',
+        'email' => 'required|email|unique:users,email',
+        'password' => 'required|min:6',
+        'role' => 'required|in:user,admin,editor',
+    ]);
+
+    // Create new user
+    $user = new User();
+    $user->user_name = $request->user_name;
+    $user->email = $request->email;
+    $user->password = Hash::make($request->password);
+    $user->role = $request->role;
+    $user->save();
+
+    // Redirect back with success message
+    return redirect()->back()->with('success', 'User created successfully.');
+}
     public function createuser(Request $request)
 {
     $rules = [
@@ -242,6 +294,21 @@ function listuser() {
     $users = User::all();
     return view('listuser', ['users' => $users]);
 }
+public function confirmDelete($id)
+{
+   
+    $user = User::findOrFail($id);
+    $user->notifications()->delete();
+        $user->comments()->forceDelete();
+        $user->histories()->delete();
+        $posts = Post::with('comments')->where('id_author', $user->id)->get();
+        foreach ($posts as $post) {
+            $post->comments()->forcedelete();
+        }
+        $user->posts()->delete();
+        $user->delete();
+        return redirect()->route('listuser');
+}
 public function destroy(Request $request)
     {
         if (Gate::denies('admin')) {
@@ -252,14 +319,23 @@ public function destroy(Request $request)
         $user =User::with('comments', 'posts', 'notifications','histories')->findOrFail($request->id);
      if ($user)
       {
-        
+        if($user->role=="admin")
+        {
+            Mail::to($user->email)->send(new DeleteAccountConfirmation($user));
+            return redirect()->route('listuser');
+        }else
+        {
+            
         $user->notifications()->delete();
         $user->comments()->forceDelete();
         $user->histories()->delete();
-        $user->posts()->delete();
+        $user->posts()->id_author = null;
         
         $user->delete();
+        return dd("ds");
         return redirect()->route('listuser');
+        }
+        
       }
       return dd('not found');
     }
@@ -281,20 +357,22 @@ public function destroy(Request $request)
         $role = $request->input('role');
         $created_at = $request->input('created_at');
         $user_name = $request->input('user_name');
-
-        $users = User::when($role, function ($query) use ($role) {
+    
+        $users = User::query()
+            ->when($role, function ($query, $role) {
                 return $query->where('role', $role);
             })
-            ->when($created_at, function ($query) use ($created_at) {
+            ->when($created_at, function ($query, $created_at) {
                 return $query->whereDate('created_at', $created_at);
             })
-            ->when($user_name, function ($query) use ($user_name) {
+            ->when($user_name, function ($query, $user_name) {
                 return $query->where('user_name', 'like', "%{$user_name}%");
             })
             ->get();
-
-        return view('listuser', ['users' => $users]);
+    
+        return view('listuser', compact('users'));
     }
+    
     public function upload(Request $request)
     {
         $uploadedImages = $request->file('upload');
@@ -309,5 +387,71 @@ public function destroy(Request $request)
         }
 
         return response()->json(['uploaded' => true, 'urls' => $uploadedImageUrls]);
+    }
+     public function edit($id)
+    {
+        $user = User::findOrFail($id);
+        return view('edituser', compact('user'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        // Validate input
+        $request->validate([
+            'user_name' => 'required',
+            'email' => 'required|email|unique:users,email,'.$id,
+            'role' => 'required|in:user,admin,editor',
+        ]);
+
+        // Find user by ID
+        $user = User::findOrFail($id);
+
+        // Update user information
+        $user->user_name = $request->user_name;
+    $user->email = $request->email;
+    $user->role = $request->role;
+    // Kiểm tra nếu password được cung cấp, thì cập nhật password mới
+    if ($request->password) {
+        $user->password = Hash::make($request->password);
+    }
+    $user->save();
+
+        // Redirect back with success message
+        return redirect()->back()->with('success', 'User information updated successfully.');
+    }
+    public function showProfile()
+    {
+         $user = Auth::user();;
+         return view('profile', compact('user'));
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $user = Auth::user();
+        $usera = User::findOrFail($user->id);
+        $usera->user_name = $request->name;
+        $usera->email = $request->email;
+       $usera->save();
+  
+        return redirect()->back()->with('success', 'Profile updated successfully.');
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required',
+            'password' => 'required|confirmed|min:8',
+        ]);
+
+         $user = User::findOrFail(Auth::user()->id);
+
+        if (!Hash::check($request->current_password, $user->password)) {
+            return redirect()->back()->with('error', 'Current password is incorrect.');
+        }
+
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        return redirect()->back()->with('success', 'Password updated successfully.');
     }
 }

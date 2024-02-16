@@ -16,8 +16,9 @@
                         <input type="text" name="teaser" value="{{ $post->teaser }}" class="form-control">
                     </div>
                     <div class="mb-3">
-                        <label for="" class="form-label">Content</label>
-                        <input type="text" name="content" value="{{ $post->content }}" class="form-control">
+    <label for="content" class="form-label">Content</label>
+    <textarea id="content" name="content" class="form-control">{!!$post->content!!}</textarea>
+ </div>
                     </div>
                     <div class="mb-3">
                     <label for="image">@if($post->thumbnail)
@@ -64,4 +65,17 @@
         </div>
     </div>
 
+    <script>
+    
+    ClassicEditor
+        .create(document.getElementById('content'), {
+            
+            ckfinder: {
+                uploadUrl: "{{ route('image.upload') }}?_token={{ csrf_token() }}"
+            },
+        })
+        .catch(error => {
+            console.error(error);
+        }); 
+</script>
 @endsection
