@@ -120,6 +120,12 @@ class PostController extends Controller
     }
 
     function update(Request $request) {
+        $id = $request->input('id');
+
+       
+        if ($id) {
+            abort(403, 'Không được phép sửa đổi ID.');
+        }
         if (Gate::denies('deletePost')) {
             abort(403);
         }

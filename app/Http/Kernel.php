@@ -53,6 +53,8 @@ class Kernel extends HttpKernel
      *
      * @var array<string, class-string|string>
      */
+  
+    
     protected $middlewareAliases = [
         'auth' => \App\Http\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
@@ -67,6 +69,7 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'admin' => \App\Http\Middleware\AdminAuthMiddleware::class,
         'ADMIN' =>\App\Http\Middleware\AdminRoleMiddleware::class,
+        'checkUrlParameters' => \App\Http\Middleware\CheckUrlParameters::class,
         
     ];
 }

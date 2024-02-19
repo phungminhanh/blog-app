@@ -13,7 +13,7 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 |
 */
 // routes/web.php
-Route::middleware(['admin','auth'])->group(function () {
+Route::middleware(['admin','auth','checkUrlParameters'])->group(function () {
     Route::get('/admin', [\App\Http\Controllers\PostController::class, 'index'])->name('index');
     Route::get('/search', [\App\Http\Controllers\PostController::class, 'search'])->name('search');
     Route::get('/{id}/edit', [\App\Http\Controllers\PostController::class, 'edit'])->name('edit');
@@ -26,6 +26,7 @@ Route::middleware(['admin','auth'])->group(function () {
     Route::post('/deleteSelected', [\App\Http\Controllers\PostController::class, 'deleteSelected'])->name('deleteSelected');
     Route::get('/post/{id}', [\App\Http\Controllers\PostController::class, 'show'])->name('show');
     Route::get('/listcomment', [\App\Http\Controllers\PostController::class, 'listcomment'])->name('listcomment');
+    Route::get('/banuser/{id}', [\App\Http\Controllers\UserController::class, 'banuser'])->name('banuser');
 });
 Route::middleware(['ADMIN','auth'])->group(function () {
     Route::get('/listuser', [\App\Http\Controllers\UserController::class, 'listuser'])->name('listuser');

@@ -924,8 +924,10 @@ button:hover {
                 @endcan
                 @can('deletecomment',$comment)
                 <a onclick="return confirm('Are you sure?')" href="{{ route('deletecomment', ['id' => $comment->id]) }}" class="btn btn-danger">Delete</a>
+               
+                
                 @endcan
-            
+            {{$comment->user->role}}
         </div>
         <div class="edit-form" id="editForm_{{ $comment->id }}">
             <form method="post" action="{{ route('editcomment', ['id' => $comment->id]) }}">
@@ -950,6 +952,9 @@ button:hover {
 
             </ul>
         </div>
+        @if(Auth::check()&& Auth::user()->banned_date && now()->diffInSeconds(Auth::user()->banned_date ) < 30)
+        <p>Bạn đã bị cấm chat. Thời gian còn lại: {{ 30 - now()->diffInSeconds(Auth::user()->banned_date ) }} giây</p>
+        @else
         @if(session('userneedrep'))
         
         <div class="comment-form">
@@ -970,6 +975,7 @@ button:hover {
                 <button type="submit">Submit</button>
                 </form>
                 </div>
+        @endif
         @endif
                 @if($errors->any())
     <div class="alert alert-danger" id ='message' style="display: flex; justify-content: space-between;">

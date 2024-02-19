@@ -12,13 +12,20 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/media_query.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap.css') }}"> 
-    
+    HTML
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" integrity="sha384-EVSTQN3/zGJyfy9hLroC6BQbqnK+v38mx9QUZTV3SHvKX2g7s0x/FJwb4QjI065k" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcBA8rxcJNlsOi9R2b58api9+l93NVWD0+nk9DqLS6d40i9m1TVQCk" crossorigin="anonymous"></script>
+
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/animate.css') }}">
     <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet"> 
     <link rel="stylesheet" type="text/css" href="{{ asset('css/owl.carousel.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/owl.theme.default.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/style_1.css') }}"> 
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script src="{{ asset('js/modernizr-3.5.0.min.js') }}"></script>
     <style>
@@ -479,6 +486,70 @@ button:hover {
         .btn-secondary {
         background: none; /* hoặc background: transparent; */
     }
+  
+.dropbtn {
+  background-color: #04AA6D;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1; 
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+.dropdown-item {
+  transition: all 0.2s ease-in-out;
+}
+
+.dropdown-item:hover {
+  background-color: #f2f2f2;
+  color: #000;
+}
+
+.dropdown-item:active {
+  background-color: #ddd;
+}
 
     </style>
 </head>
@@ -579,18 +650,22 @@ button:hover {
         });
     </script>
 
-            @if(Auth::check())
-   
-           
+@if(Auth::check())
+<div class="dropdown">
+  <button class="dropdown-button">Account Options</button>
+  <div class="dropdown-content">
+  <a class="dropdown-item" href="{{ route('logout') }}">
+  <span class="nav-link-text">Logout</span>
+</a>
+<a class="dropdown-item" href="{{ route('user.profile') }}">
+  <span class="nav-link-text">Profile</span>
+</a>
+
+  </div>
+</div>
 
 
-    
-        @csrf
-        <a href="{{ route('logout') }}"> <button type="submit" class="btn btn-danger">Logout</button></a>
-        <a href="{{ route('user.profile') }}">Chỉnh sửa thông tin</a>
-      </form>
-   @else
-     
+@else
    
             <span id="loginIcon" onclick="togglePopup()" ><i class="fas fa-user"></i></span>
          

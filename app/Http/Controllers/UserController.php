@@ -454,4 +454,5 @@ public function destroy(Request $request)
 
         return redirect()->back()->with('success', 'Password updated successfully.');
     }
+    
 }
