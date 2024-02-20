@@ -202,7 +202,7 @@ public function store(Request $request)
         $comment->save();
         return redirect()->route('article', ['id' => $request->id])->with('success', 'Comment deleted successfully.');
     } else{
-        return view('login');
+        return redirect()->route('login');
     }
 }
 function deletecomment(Request $request) {

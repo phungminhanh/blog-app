@@ -12,7 +12,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/media_query.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap.css') }}"> 
-    HTML
+    
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" integrity="sha384-EVSTQN3/zGJyfy9hLroC6BQbqnK+v38mx9QUZTV3SHvKX2g7s0x/FJwb4QjI065k" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcBA8rxcJNlsOi9R2b58api9+l93NVWD0+nk9DqLS6d40i9m1TVQCk" crossorigin="anonymous"></script>
 
